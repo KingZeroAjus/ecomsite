@@ -1,0 +1,92 @@
+{% extends 'shop/base.html' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="/">
+                    <button class="btn-warning">Kembali</button>
+                </a>
+            </div>
+            <div class="col-md-12">
+                <ul class="list-group" id="item_list">
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" id="items" name="items">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputName4">Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="name"
+                                   name="name"
+                                   placeholder="John">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name="email"
+                                   placeholder="john@gmail.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress">Address</label>
+                        <input type="text"
+                               class="form-control"
+                               id="address"
+                               name="address"
+                               placeholder="1234 Main St">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">City</label>
+                            <input type="text" class="form-control" id="city" name="city">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputState">State</label>
+                            <input type="text" class="form-control" id="state" name="state">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputZip">Zip</label>
+                            <input type="text" class="form-control" id="zipcode" name="zipcode">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputZip">Ammount To Paid</label>
+                            <input readonly="" type="text" class="form-control" id="total" name="total">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+{% endblock body %}
+{% block script %}
+    <script type="text/javascript">
+        if (localStorage.getItem("cart") == null) {
+            var cart = {};
+        } else {
+            cart = JSON.parse(localStorage.getItem("cart"));
+        }
+        let total = 0;
+        for (item in cart) {
+            let name = cart[item][1];
+            let quantity = cart[item][0];
+            let price = cart[item][2];
+            total = total + cart[item][2]
+        
+            itemString = `<li class="list-group-item"><span class="">${quantity} of ${name} <span class="badge badge-warning badge-pill"> ${price}</li>`
+            $('#item_list').append(itemString);
+        }
+        totalPrice = `<li class="list-group-item d-flex justify-content-between align-items-center"><b>Your Total Belanja</b>${total}</li>`
+        $('#item_list').append(totalPrice);
+        $('#items').val(JSON.stringify(cart));
+        $('#total').val(total);
+    </script>
+{% endblock script %}
